@@ -7,59 +7,68 @@ import { TwitterService } from '../twitter.service';
   templateUrl: './tweets.component.html',
   styleUrls: ['./tweets.component.scss']
 })
-export class TweetsComponent implements OnInit, OnDestroy {
+export class TweetsComponent implements OnInit {
   inflight = false;
   tweets: Tweet[] = [];
   ids = [];
-  timer;
   since = '';
+  sort  = [ 'favourite_Count', 'retweet_count', 'id'];
+  counts  = [50,100, 150,200,250,300,350,400]; 
+  curCount : number = 0;
+  curType = '';
 
   constructor(private twitter: TwitterService) {}
 
   ngOnInit() {
     this.getTweets();
-    this.timer = setInterval(() => this.getTweets(), 61000);
   }
 
-  ngOnDestroy() {
-    if (this.timer) {
-      clearInterval(this.timer);
+  onSortSelect(event) {
+    this.curType = event.target.value;
+    if(this.curType == 'favourite_Count') {
+      this.tweets.sort(function (a, b) {
+        return a.user.favourites_count - b.user.favourites_count;
+      });
+    } else if (this.curType == 'retweet_count') {
+      this.tweets.sort(function (a, b) {
+        return a.retweet_count - b.retweet_count;
+      });
+    } else if(this.curType == 'id' ) {
+      this.tweets.sort(function (a, b) {
+        return a.id- b.id;
+      });
+    } else {
+      this.tweets.sort(function (a, b) {
+        return a.retweet_count - b.retweet_count;
+      });
     }
   }
+
+  logText(searchKey : string) {
+      this.since = searchKey;
+      this.since = this.since.replace(/#/g, "%23");
+      this.getTweets();
+  }
+
+  onCountSelect(event) {
+    this.curCount = event.target.value;
+  }
+
 
   getTweets() {
-    this.twitter.home(this.since).subscribe(tweets => {
-      tweets.data.reverse().forEach(tweet => {
-        if (this.ids.indexOf(tweet.id_str) < 0) {
+    for (var i = this.tweets.length; i > 0; i--) {
+      this.tweets.pop();
+    }
+    this.twitter.home(this.since, this.curCount).subscribe(tweets => {
+      
+      try{
+      tweets.data.statuses.forEach(tweet => {
           this.ids.push(tweet.id_str);
           this.tweets.unshift(tweet);
-        }
       });
-      this.since = this.tweets[0].id_str;
-      this.cleanUp();
+      } catch(err) {
+      }
     });
   }
 
-  cleanUp() {
-    if (this.tweets.length > 1000) {
-      this.tweets.splice(1000);
-      this.ids.splice(1000);
-    }
-  }
-
-  action(action, index) {
-    if (this.inflight) {
-      return;
-    }
-
-    const stateKey = action.property === 'favorite' ? 'favorited' : 'retweeted';
-    const newState = !action.tweet[stateKey];
-
-    this.inflight = true;
-    this.twitter.action(action.property, action.tweet.id_str, newState).subscribe(tweet => {
-      this.tweets[index][stateKey] = newState;
-      this.tweets[index][action.property + '_count'] += newState ? 1 : -1;
-      this.inflight = false;
-    });
-  }
 }

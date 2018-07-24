@@ -32,6 +32,7 @@ export class Tweet {
       id: number;
     }[];
   };
+  
   source: string;
   in_reply_to_status_id: number;
   in_reply_to_user_id: number;

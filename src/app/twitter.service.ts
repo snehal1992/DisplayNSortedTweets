@@ -17,11 +17,7 @@ export class TwitterService {
     return this.http.get<TwitterResponse>(`${environment.api}/user`);
   }
 
-  home(since?: string) {
-    return this.http.get<TwitterResponse>(`${environment.api}/home?since=${since}`);
-  }
-
-  action(property: 'favorite'|'retweet', id: string, state: boolean) {
-    return this.http.post<TwitterResponse>(`${environment.api}/${property}/${id}`, {state});
+  home(since?: string, curCount?: number) {
+    return this.http.get<TwitterResponse>(`${environment.api}/home?since=${since}&count=${curCount}`);
   }
 }

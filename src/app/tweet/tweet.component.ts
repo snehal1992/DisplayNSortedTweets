@@ -9,7 +9,6 @@ import { Tweet } from '../tweet';
 export class TweetComponent {
   @Input() tweet: Tweet;
   @Input() retweet: Tweet;
-  @Output() action = new EventEmitter<{property: string, tweet: Tweet}>();
 
   hasPhoto(tweet: Tweet) {
     if (tweet.entities.media
@@ -18,9 +17,5 @@ export class TweetComponent {
       return true;
     }
     return false;
-  }
-
-  toggleAction(property: 'favorite'|'retweet') {
-    this.action.emit({property, tweet: this.tweet});
   }
 }

@@ -1,6 +1,23 @@
 <div class="tweets">
-  <div class="card" *ngFor="let tweet of tweets; let i = index">
-    <app-tweet *ngIf="tweet.retweeted_status" [tweet]="tweet.retweeted_status" [retweet]="tweet" (action)="action($event, i)"></app-tweet>
-    <app-tweet *ngIf="!tweet.retweeted_status" [tweet]="tweet" (action)="action($event, i)"></app-tweet>
+  <div>
+    <input #textbox type="text">
+    <button (click)="logText(textbox.value)">Search<i class="fa fa-search"></i>
+    </button>
+
+    <select id="count" formControlName="count" (change)="onCountSelect($event)">
+      <option *ngFor="let count of counts" >
+        {{ count }} 
+      </option>
+    </select> 
+
+  <select id="city" formControlName="sort" (change)="onSortSelect($event)" >
+    <option *ngFor="let type of sort" >
+        {{ type }} 
+    </option>
+  </select> 
+  </div>
+  
+  <div class="card" *ngFor="let tweet of tweets">
+    <app-tweet [tweet]="tweet"></app-tweet>
   </div>
 </div>

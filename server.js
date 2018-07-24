@@ -3,10 +3,10 @@ const Twitter = require('twit');
 
 const app = express();
 const client = new Twitter({
-  consumer_key: 'CONSUMER_KEY',
-  consumer_secret: 'CONSUMER_SECRET',
-  access_token: 'ACCESS_TOKEN',
-  access_token_secret: 'ACCESS_TOKEN_SECRET'
+  consumer_key: 'Dwz9WGq3ZTqDqecIPytujDH1A',
+  consumer_secret: 'xvZfemrhyf21fVSskRtwFEVbVETRn5NRLkUGtJpPcq7nsXPig9',
+  access_token: '198527536-rne7c3yJeFZhhsBHwF5vdphJ6TGPqQOoB6oHLZGy',
+  access_token_secret: 'I1d2Z18WBF1N5ERMq9b2AYSDunHRIGI33ESWwemduAqdX'
 });
 
 app.use(require('cors')());
@@ -27,38 +27,18 @@ let cache = [];
 let cacheAge = 0;
 
 app.get('/api/home', (req, res) => {
-  if (Date.now() - cacheAge > 60000) {
-    cacheAge = Date.now();
-    const params = { tweet_mode: 'extended', count: 200 };
-    if (req.query.since) {
-      params.since_id = req.query.since;
+    params = { q: '', count: Number(req.query.count), include_entities : true};
+    if (req.query.since != '') {
+      params.q= req.query.since;
     }
+    console.log(params);
     client
-      .get(`statuses/home_timeline`, params)
+      .get(`search/tweets`, params)
       .then(timeline => {
-        cache = timeline;
         res.send(timeline);
-      })
-      .catch(error => res.send(error));
-  } else {
-    res.send(cache);
-  }
+      }).catch(error => res.send(error));
+  
 });
 
-app.post('/api/favorite/:id', (req, res) => {
-  const path = req.body.state ? 'create' : 'destroy';
-  client
-    .post(`favorites/${path}`, { id: req.params.id })
-    .then(tweet => res.send(tweet))
-    .catch(error => res.send(error));
-});
-
-app.post('/api/retweet/:id', (req, res) => {
-  const path = req.body.state ? 'retweet' : 'unretweet';
-  client
-    .post(`statuses/retweet/${req.params.id}`)
-    .then(tweet => res.send(tweet))
-    .catch(error => res.send(error));
-});
 
 app.listen(3000, () => console.log('Server running'));

@@ -1,6 +1,7 @@
 import { Component , OnInit} from '@angular/core';
 import { TwitterService } from './twitter.service';
 import { Tweet } from './tweet';
+import {enableProdMode} from '@angular/core';
 
 @Component({
   selector: 'app-root',
