@@ -8,12 +8,11 @@ import { TwitterService } from '../twitter.service';
   styleUrls: ['./tweets.component.scss']
 })
 export class TweetsComponent implements OnInit {
-  inflight = false;
   tweets: Tweet[] = [];
   ids = [];
   since = '';
-  sort  = [ 'favourite_Count', 'retweet_count', 'id'];
-  counts  = [50,100, 150,200,250,300,350,400]; 
+  sort  = ['' , 'Favorite Count', 'Retweet Count', 'Id', 'Creation Date'];
+  counts  = ['']; 
   curCount : number = 0;
   curType = '';
 
@@ -21,23 +20,32 @@ export class TweetsComponent implements OnInit {
 
   ngOnInit() {
     this.getTweets();
+    for (var i = 10; i <= 500; i+= 10) {
+      this.counts.push(i.toString());
+    } 
   }
 
   onSortSelect(event) {
     this.curType = event.target.value;
-    if(this.curType == 'favourite_Count') {
+    if(this.curType == 'Favorite Count') {
       this.tweets.sort(function (a, b) {
         return a.user.favourites_count - b.user.favourites_count;
       });
-    } else if (this.curType == 'retweet_count') {
+    } else if (this.curType == 'Retweet Count') {
       this.tweets.sort(function (a, b) {
         return a.retweet_count - b.retweet_count;
       });
-    } else if(this.curType == 'id' ) {
+    } else if(this.curType == 'Id' ) {
       this.tweets.sort(function (a, b) {
         return a.id- b.id;
       });
-    } else {
+    } else if(this.curType == ''){
+        //Do nothing
+      }else if(this.curType == 'Creation Date'){
+        this.tweets.sort(function (a, b) {
+        return b.created_at.localeCompare(a.created_at);
+      });
+      } else {
       this.tweets.sort(function (a, b) {
         return a.retweet_count - b.retweet_count;
       });
@@ -67,6 +75,7 @@ export class TweetsComponent implements OnInit {
           this.tweets.unshift(tweet);
       });
       } catch(err) {
+        
       }
     });
   }

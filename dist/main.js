@@ -308,7 +308,7 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<clr-main-container>\n  <clr-header class=\"header-4\">\n    <div class=\"branding\">\n      <a class=\"nav-link\">\n        <div class=\"title\">Twiter Search</div>\n      </a>\n    </div>\n    <div class=\"header-actions\" *ngIf=\"user\">\n      <a class=\"nav-link\">\n        <span class=\"nav-text\">\n          <img [src]=\"user.profile_image_url_https\" class=\"avatar\" />\n          @{{user.screen_name}}\n        </span>\n      </a>\n    </div>\n  </clr-header>\n  <div class=\"content-container\">\n    <main class=\"content-area\">\n      <app-tweets></app-tweets>\n    </main>\n  </div>\n</clr-main-container>"
+module.exports = "<clr-main-container>\n  <clr-header>\n    <div class=\"titleName\">\n      Twitter Search  \n    </div>\n  </clr-header>\n  <div >\n    <main>\n      <app-tweets></app-tweets>\n    </main>\n  </div>\n</clr-main-container>"
 
 /***/ }),
 
@@ -319,7 +319,7 @@ module.exports = "<clr-main-container>\n  <clr-header class=\"header-4\">\n    <
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".header-actions {\n  padding-right: 20px; }\n  .header-actions .avatar {\n    height: 36px;\n    margin-right: 12px; }\n  .header-actions .user {\n    line-height: 60px; }\n"
+module.exports = ".header-actions {\n  padding-right: 20px; }\n  .header-actions .avatar {\n    height: 36px;\n    margin-right: 12px; }\n  .header-actions .user {\n    line-height: 60px; }\n  .titleName {\n  margin: 20px 20px 0px 0px;\n  font-size: 30px; }\n"
 
 /***/ }),
 
@@ -538,7 +538,7 @@ var TweetComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"tweets\">\n  <div>\n    <input #textbox type=\"text\">\n    <button (click)=\"logText(textbox.value)\">Search<i class=\"fa fa-search\"></i>\n    </button>\n\n    <select id=\"count\" formControlName=\"count\" (change)=\"onCountSelect($event)\">\n      <option *ngFor=\"let count of counts\" >\n        {{ count }} \n      </option>\n    </select> \n\n  <select id=\"city\" formControlName=\"sort\" (change)=\"onSortSelect($event)\" >\n    <option *ngFor=\"let type of sort\" >\n        {{ type }} \n    </option>\n  </select> \n  </div>\n  \n  <div class=\"card\" *ngFor=\"let tweet of tweets\">\n    <app-tweet [tweet]=\"tweet\"></app-tweet>\n  </div>\n</div>"
+module.exports = "<div class=\"tweets\">\n  <div>\n    <input #textbox type=\"text\" placeholder=\"Search..\">\n    <button class=\"button\" (click)=\"logText(textbox.value)\">Search</button>\n\n  <h6> Number of tweets : </h6>\n  <select id=\"count\" (change)=\"onCountSelect($event)\">\n      <option *ngFor=\"let count of counts\" >\n        {{ count }} \n      </option>\n  </select> \n\n  <h6> Filter By : </h6>\n  <select id=\"city\"  (change)=\"onSortSelect($event)\" >\n    <option *ngFor=\"let type of sort\" >\n        {{ type }} \n    </option>\n  </select> \n  </div>\n  \n  <div class=\"card\" *ngFor=\"let tweet of tweets\">\n    <app-tweet [tweet]=\"tweet\"></app-tweet>\n  </div>\n</div>"
 
 /***/ }),
 
@@ -549,7 +549,7 @@ module.exports = "<div class=\"tweets\">\n  <div>\n    <input #textbox type=\"te
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".button {\n  border: none;\n  color: white;\n  padding: 5px 12px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 16px;\n  margin: 1px 1px;\n  cursor: pointer;\n  background-color: #e7e7e7;\n  color: black; }\n\nh6 {\n  display: inline-block;\n  font-size: 16px; }\n\nselect {\n  padding: 5px 12px;\n  margin: 1px 1px;\n  font-size: 16px;\n  border-radius: 4px;\n  background: #e7e7e7;\n  color: black;\n  border: none;\n  outline: none;\n  display: inline-block;\n  cursor: pointer; }\n"
 
 /***/ }),
 
@@ -579,33 +579,43 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var TweetsComponent = /** @class */ (function () {
     function TweetsComponent(twitter) {
         this.twitter = twitter;
-        this.inflight = false;
         this.tweets = [];
         this.ids = [];
         this.since = '';
-        this.sort = ['favourite_Count', 'retweet_count', 'id'];
-        this.counts = [50, 100, 150, 200, 250, 300, 350, 400];
+        this.sort = ['', 'Favorite Count', 'Retweet Count', 'Id', 'Creation Date'];
+        this.counts = [''];
         this.curCount = 0;
         this.curType = '';
     }
     TweetsComponent.prototype.ngOnInit = function () {
         this.getTweets();
+        for (var i = 10; i <= 500; i += 10) {
+            this.counts.push(i.toString());
+        }
     };
     TweetsComponent.prototype.onSortSelect = function (event) {
         this.curType = event.target.value;
-        if (this.curType == 'favourite_Count') {
+        if (this.curType == 'Favorite Count') {
             this.tweets.sort(function (a, b) {
                 return a.user.favourites_count - b.user.favourites_count;
             });
         }
-        else if (this.curType == 'retweet_count') {
+        else if (this.curType == 'Retweet Count') {
             this.tweets.sort(function (a, b) {
                 return a.retweet_count - b.retweet_count;
             });
         }
-        else if (this.curType == 'id') {
+        else if (this.curType == 'Id') {
             this.tweets.sort(function (a, b) {
                 return a.id - b.id;
+            });
+        }
+        else if (this.curType == '') {
+            //Do nothing
+        }
+        else if (this.curType == 'Creation Date') {
+            this.tweets.sort(function (a, b) {
+                return b.created_at.localeCompare(a.created_at);
             });
         }
         else {
@@ -709,21 +719,10 @@ var TwitterService = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "environment", function() { return environment; });
-// The file contents for the current environment will overwrite these during build.
-// The build system defaults to the dev environment which uses `environment.ts`, but if you do
-// `ng build --env=prod` then `environment.prod.ts` will be used instead.
-// The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
     production: false,
     api: '/api'
 };
-/*
- * In development mode, to ignore zone related error stack frames such as
- * `zone.run`, `zoneDelegate.invokeTask` for easier debugging, you can
- * import the following file, but please comment it out in production mode
- * because it will have performance impact when throw error
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
 
 
 /***/ }),

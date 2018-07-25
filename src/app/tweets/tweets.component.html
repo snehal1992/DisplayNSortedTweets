@@ -1,16 +1,17 @@
 <div class="tweets">
   <div>
-    <input #textbox type="text">
-    <button (click)="logText(textbox.value)">Search<i class="fa fa-search"></i>
-    </button>
+    <input #textbox type="text" placeholder="Search..">
+    <button class="button" (click)="logText(textbox.value)">Search</button>
 
-    <select id="count" formControlName="count" (change)="onCountSelect($event)">
+  <h6> Number of tweets : </h6>
+  <select id="count" (change)="onCountSelect($event)">
       <option *ngFor="let count of counts" >
         {{ count }} 
       </option>
-    </select> 
+  </select> 
 
-  <select id="city" formControlName="sort" (change)="onSortSelect($event)" >
+  <h6> Filter By : </h6>
+  <select id="city"  (change)="onSortSelect($event)" >
     <option *ngFor="let type of sort" >
         {{ type }} 
     </option>
