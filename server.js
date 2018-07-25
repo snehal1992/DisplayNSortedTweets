@@ -1,8 +1,8 @@
 const express = require('express');
 const Twitter = require('twit');
-const process = require('process');
-const PORT = process.env.PORT || 8080;
+
 const app = express();
+app.set('port', process.env.PORT || 8080);
 const client = new Twitter({
   consumer_key: 'Dwz9WGq3ZTqDqecIPytujDH1A',
   consumer_secret: 'xvZfemrhyf21fVSskRtwFEVbVETRn5NRLkUGtJpPcq7nsXPig9',
@@ -13,7 +13,7 @@ const client = new Twitter({
 app.use(require('cors')());
 app.use(require('body-parser').json());
 
-app.get('https://displaytweets.herokuapp.com/api/user', (req, res) => {
+app.get('api/user', (req, res) => {
   client
     .get('account/verify_credentials')
     .then(user => {
@@ -27,7 +27,7 @@ app.get('https://displaytweets.herokuapp.com/api/user', (req, res) => {
 let cache = [];
 let cacheAge = 0;
 
-app.get('https://displaytweets.herokuapp.com/api/home', (req, res) => {
+app.get('api/home', (req, res) => {
     params = { q: '', count: Number(req.query.count), include_entities : true};
     if (req.query.since != '') {
       params.q= req.query.since;
@@ -42,4 +42,4 @@ app.get('https://displaytweets.herokuapp.com/api/home', (req, res) => {
 });
 
 
-app.listen(PORT, () => console.log('Server running'));
+app.listen(app.get('port'), () => console.log('Server running'));
