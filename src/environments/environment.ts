@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  api: 'api'
+  api: 'https://displaytweets.herokuapp.com/api'
 };
 
 /*
