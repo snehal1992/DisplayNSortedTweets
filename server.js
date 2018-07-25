@@ -1,6 +1,7 @@
 const express = require('express');
 const Twitter = require('twit');
-
+const process = require('process');
+const PORT = process.env.PORT || 8080;
 const app = express();
 const client = new Twitter({
   consumer_key: 'Dwz9WGq3ZTqDqecIPytujDH1A',
@@ -41,4 +42,4 @@ app.get('/api/home', (req, res) => {
 });
 
 
-app.listen(8080, () => console.log('Server running'));
+app.listen(PORT, () => console.log('Server running'));
