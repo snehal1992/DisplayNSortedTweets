@@ -30,8 +30,7 @@ app.get('/api/user', (req, res) => {
     });
 });
 
-let cache = [];
-let cacheAge = 0;
+
 
 app.get('/api/home', (req, res) => {
     params = { q: '', count: Number(req.query.count), include_entities : true};
@@ -47,5 +46,4 @@ app.get('/api/home', (req, res) => {
   
 });
 
-console.log(app.get('port'));
-app.listen(app.get('port'), () => console.log('Server running'));
+app.listen(app.get('port'));
