@@ -13,7 +13,7 @@ const client = new Twitter({
 app.use(require('cors')());
 app.use(require('body-parser').json());
 
-app.get('/api/user', (req, res) => {
+app.get('https://displaytweets.herokuapp.com/api/user', (req, res) => {
   client
     .get('account/verify_credentials')
     .then(user => {
@@ -27,7 +27,7 @@ app.get('/api/user', (req, res) => {
 let cache = [];
 let cacheAge = 0;
 
-app.get('/api/home', (req, res) => {
+app.get('https://displaytweets.herokuapp.com/api/home', (req, res) => {
     params = { q: '', count: Number(req.query.count), include_entities : true};
     if (req.query.since != '') {
       params.q= req.query.since;
