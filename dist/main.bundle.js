@@ -639,7 +639,7 @@ var TwitterService = /** @class */ (function () {
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
     production: false,
-    api: 'https://displaytweets.herokuapp.com/api'
+    api: '/api'
 };
 /*
  * In development mode, to ignore zone related error stack frames such as
