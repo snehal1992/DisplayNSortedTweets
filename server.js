@@ -41,4 +41,4 @@ app.get('/api/home', (req, res) => {
 });
 
 
-app.listen(3000, () => console.log('Server running'));
+app.listen(8080, () => console.log('Server running'));
